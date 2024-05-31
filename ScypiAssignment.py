@@ -30,16 +30,19 @@ descriptions = {
 
 dist_type = st.sidebar.selectbox("Select Distribution", list(descriptions.keys()))
 st.sidebar.markdown("### Input Parameters")
+
 result = "Unknown"
+xline = 0
 
 if dist_type == "Binomial distribution":
     n = st.sidebar.number_input("n (Number of Trials)", value=10, step=1)
     p = st.sidebar.number_input("p (Probability of Success)", value=0.5, min_value=0.0, max_value=1.0, step=0.01)
     k = st.sidebar.number_input("k (Number of Successes)", value=5, step=1)
     result = stats.binom.pmf(k, n, p)
-    x = np.arange(0, n+1)
+    x = np.arange(0, n + 1)
     y = stats.binom.pmf(x, n, p)
     xline = k
+
 elif dist_type == "Poisson distribution":
     λ = st.sidebar.number_input("λ (Rate Parameter)", value=5.0, step=0.1)
     k = st.sidebar.number_input("k (Number of Events)", value=5, step=1)
@@ -47,6 +50,7 @@ elif dist_type == "Poisson distribution":
     x = np.arange(0, 20)
     y = stats.poisson.pmf(x, λ)
     xline = k
+
 elif dist_type == "Geometric distribution":
     p = st.sidebar.number_input("p (Probability of Success)", value=0.5, min_value=0.0, max_value=1.0, step=0.01)
     k = st.sidebar.number_input("k (Number of Trials until First Success)", value=5, step=1)
@@ -54,6 +58,7 @@ elif dist_type == "Geometric distribution":
     x = np.arange(1, 20)
     y = stats.geom.pmf(x, p)
     xline = k
+
 elif dist_type == "Hypergeometric distribution":
     M = st.sidebar.number_input("M (Total Population)", value=20, step=1)
     n = st.sidebar.number_input("n (Number of Successes in Population)", value=7, step=1)
@@ -63,23 +68,25 @@ elif dist_type == "Hypergeometric distribution":
     x = np.arange(max(0, n + N - M), min(n, N) + 1)
     y = stats.hypergeom.pmf(x, M, n, N)
     xline = k
+
 elif dist_type == "Standard distribution":
     mu = st.sidebar.number_input("μ (Mean)", value=0.0, step=0.1)
     sigma = st.sidebar.number_input("σ (Standard Deviation)", value=1.0, step=0.1)
     x = st.sidebar.number_input("x (Value)", value=0.0, step=0.1)
     xline = x
     result = stats.norm.pdf(x, mu, sigma)
-    x = np.linspace(mu - 4*sigma, mu + 4*sigma, 100)
+    x = np.linspace(mu - 4 * sigma, mu + 4 * sigma, 100)
     y = stats.norm.pdf(x, mu, sigma)
 
+prob_sum = np.sum(y[x <= xline])
 
 st.markdown(f"## {dist_type}")
 st.markdown(descriptions[dist_type]["description"])
 st.markdown(descriptions[dist_type]["equation"])
-st.markdown(f"### Result: \nProbability: {result}")
+st.markdown(f"### Result: \nP(x): {result}  \n P(x_i<x) {xline}: {prob_sum}")
 
 fig, ax = plt.subplots()
 ax.plot(x, y, 'bo', ms=8, label='pmf' if 'discrete' in dist_type.lower() else 'pdf')
 ylow, ymax = ax.get_ylim()
-ax.vlines(xline, ylow, ymax,colors='red')
+ax.vlines(xline, ylow, ymax, colors='red')
 st.pyplot(fig)
