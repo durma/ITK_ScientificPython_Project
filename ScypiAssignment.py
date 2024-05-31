@@ -4,7 +4,7 @@ import scipy.stats as stats
 
 st.title("Probability Distribution Calculator")
 
-dist_type = st.sidebar.selectbox("Select Distribution", ["Binomiális eloszlás", "Poisson eloszlás", "Geometriai eloszlás", "Hipergeometriai eloszlás", "Normális eloszlás"])
+dist_type = st.sidebar.selectbox("Select Distribution", ["Binomial distribution", "Poisson distribution", "Geometric distribution", "Hypergeometric distribution", "Standard distribution"])
 
 st.sidebar.markdown("### Input Parameters")
 result = "Unknown"
