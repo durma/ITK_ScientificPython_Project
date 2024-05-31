@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 
 st.title("Probability Distribution Calculator")
 
-# Description dictionary
 descriptions = {
     "Binomial distribution": {
         "description": "The binomial distribution models the number of successes in a fixed number of trials, with each trial having a constant probability of success.",
@@ -40,18 +39,21 @@ if dist_type == "Binomial distribution":
     result = stats.binom.pmf(k, n, p)
     x = np.arange(0, n+1)
     y = stats.binom.pmf(x, n, p)
+    xline = k
 elif dist_type == "Poisson distribution":
     λ = st.sidebar.number_input("λ (Rate Parameter)", value=5.0, step=0.1)
     k = st.sidebar.number_input("k (Number of Events)", value=5, step=1)
     result = stats.poisson.pmf(k, λ)
     x = np.arange(0, 20)
     y = stats.poisson.pmf(x, λ)
+    xline = k
 elif dist_type == "Geometric distribution":
     p = st.sidebar.number_input("p (Probability of Success)", value=0.5, min_value=0.0, max_value=1.0, step=0.01)
     k = st.sidebar.number_input("k (Number of Trials until First Success)", value=5, step=1)
     result = stats.geom.pmf(k, p)
     x = np.arange(1, 20)
     y = stats.geom.pmf(x, p)
+    xline = k
 elif dist_type == "Hypergeometric distribution":
     M = st.sidebar.number_input("M (Total Population)", value=20, step=1)
     n = st.sidebar.number_input("n (Number of Successes in Population)", value=7, step=1)
@@ -60,21 +62,24 @@ elif dist_type == "Hypergeometric distribution":
     result = stats.hypergeom.pmf(k, M, n, N)
     x = np.arange(max(0, n + N - M), min(n, N) + 1)
     y = stats.hypergeom.pmf(x, M, n, N)
+    xline = k
 elif dist_type == "Standard distribution":
     mu = st.sidebar.number_input("μ (Mean)", value=0.0, step=0.1)
     sigma = st.sidebar.number_input("σ (Standard Deviation)", value=1.0, step=0.1)
     x = st.sidebar.number_input("x (Value)", value=0.0, step=0.1)
+    xline = x
     result = stats.norm.pdf(x, mu, sigma)
     x = np.linspace(mu - 4*sigma, mu + 4*sigma, 100)
     y = stats.norm.pdf(x, mu, sigma)
 
+
 st.markdown(f"## {dist_type}")
 st.markdown(descriptions[dist_type]["description"])
 st.markdown(descriptions[dist_type]["equation"])
-st.markdown(f"### Result: {result}")
+st.markdown(f"### Result: \nProbability: {result}")
 
-# Plotting the distribution
 fig, ax = plt.subplots()
 ax.plot(x, y, 'bo', ms=8, label='pmf' if 'discrete' in dist_type.lower() else 'pdf')
-ax.vlines(x, 0, y, colors='b', lw=5, alpha=0.5)
+ylow, ymax = ax.get_ylim()
+ax.vlines(xline, ylow, ymax,colors='red')
 st.pyplot(fig)
