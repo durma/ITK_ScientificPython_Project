@@ -78,7 +78,7 @@ elif dist_type == "Standard distribution":
     x = np.linspace(mu - 4 * sigma, mu + 4 * sigma, 100)
     y = stats.norm.pdf(x, mu, sigma)
 
-prob_sum = np.sum(y[x <= xline])
+prob_sum = np.sum(y[x < xline])
 
 st.markdown(f"## {dist_type}")
 st.markdown(descriptions[dist_type]["description"])
